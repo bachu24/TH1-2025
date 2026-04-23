@@ -54,6 +54,12 @@ def mode_or_nan(values: pd.Series) -> float:
     return m.iloc[0] if len(m) else np.nan
 
 
+def extract_subject_id(df: pd.DataFrame, subject_col: str, path: str) -> str:
+    if subject_col in df.columns and df[subject_col].notna().any():
+        return str(df[subject_col].dropna().iloc[0])
+    return os.path.splitext(os.path.basename(path))[0]
+
+
 def make_window_dataset(
     csv_paths: List[str],
     label_col: str,
@@ -74,20 +80,17 @@ def make_window_dataset(
             print(f"[WARN] {path}: no valid windows after gating")
             continue
 
-        if subject_col in df.columns:
-            subject_value = str(df[subject_col].dropna().iloc[0]) if df[subject_col].notna().any() else os.path.basename(path)
-        else:
-            subject_value = os.path.splitext(os.path.basename(path))[0]
+        subject_value = extract_subject_id(df, subject_col, path)
 
-        y_vals = []
+        window_level_labels = []
         for _, meta in meta_df.iterrows():
             win_labels = pd.to_numeric(df[label_col].iloc[int(meta.start_idx):int(meta.end_idx)], errors="coerce")
-            y_vals.append(mode_or_nan(win_labels))
+            window_level_labels.append(mode_or_nan(win_labels))
 
-        y_vals = np.asarray(y_vals)
-        keep = np.isfinite(y_vals)
+        window_level_labels = np.asarray(window_level_labels)
+        keep = np.isfinite(window_level_labels)
         feat_df = feat_df.loc[keep].reset_index(drop=True)
-        y_vals = y_vals[keep].astype(int)
+        window_level_labels = window_level_labels[keep].astype(int)
 
         if len(feat_df) == 0:
             print(f"[WARN] {path}: all labels invalid at window level")
@@ -95,9 +98,9 @@ def make_window_dataset(
 
         feat_df["__subject__"] = subject_value
         all_rows.append(feat_df)
-        all_y.append(y_vals)
-        all_groups.append(np.array([subject_value] * len(y_vals)))
-        print(f"[DATA] {path}: windows={len(y_vals)} valid={stats['n_windows_valid']}")
+        all_y.append(window_level_labels)
+        all_groups.append(np.array([subject_value] * len(window_level_labels)))
+        print(f"[DATA] {path}: windows={len(window_level_labels)} valid={stats['n_windows_valid']}")
 
     if not all_rows:
         raise RuntimeError("No training windows were produced")
@@ -291,7 +294,15 @@ def main() -> None:
         ("scaler", StandardScaler()),
     ])
     X_train_scaled = legacy_pipe.fit_transform(X_train)
-    svm_legacy = SVC(kernel="rbf", class_weight="balanced", probability=True, random_state=args.random_state)
+    best_svm_params = evaluations["svm"].get("best_params", {})
+    svm_legacy = SVC(
+        kernel="rbf",
+        class_weight="balanced",
+        probability=True,
+        random_state=args.random_state,
+        C=best_svm_params.get("clf__C", 1.0),
+        gamma=best_svm_params.get("clf__gamma", "scale"),
+    )
     svm_legacy.fit(X_train_scaled, y_train)
 
     with open(os.path.join(args.out_dir, "meditation_svm_classifier.pkl"), "wb") as f:

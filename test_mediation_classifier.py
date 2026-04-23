@@ -212,7 +212,7 @@ def main() -> None:
     results["level_name"] = [LEVEL_NAMES.get(int(p), str(p)) for p in pred]
     results["confidence"] = np.round(conf, 4)
     for i in range(n_classes):
-        results[f"prob_class_{i}"] = np.round(proba[:, i], 4)
+        results[f"prob_L{i}"] = np.round(proba[:, i], 4)
 
     out_csv = os.path.join(SCRIPT_DIR, f"{base}_predictions.csv")
     results.to_csv(out_csv, index=False)

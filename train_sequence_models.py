@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import os
 import pickle
 from collections import Counter
@@ -53,9 +54,9 @@ def create_sequences(
         xg, yg = x[idx], y[idx]
         for i in range(0, len(xg) - seq_len + 1, step):
             seq_x = xg[i : i + seq_len]
-            seq_y = Counter(yg[i : i + seq_len]).most_common(1)[0][0]
+            most_common_class = Counter(yg[i : i + seq_len]).most_common(1)[0][0]
             xs.append(seq_x)
-            ys.append(seq_y)
+            ys.append(most_common_class)
             gs.append(g)
     return np.asarray(xs), np.asarray(ys).astype(int), np.asarray(gs)
 
@@ -123,10 +124,9 @@ def main() -> None:
     args = parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
 
-    try:
-        import tensorflow as tf  # noqa: F401
-    except Exception as exc:  # pragma: no cover
-        raise RuntimeError("TensorFlow is required for LSTM/Bi-LSTM experiments") from exc
+    if importlib.util.find_spec("tensorflow") is None:  # pragma: no cover
+        raise RuntimeError("TensorFlow is required for LSTM/Bi-LSTM experiments")
+    import tensorflow as tf
 
     X_win, y_win, g_win = build_dataset(args.input, args.label_col, args.subject_col)
     X_seq, y_seq, g_seq = create_sequences(X_win, y_win, g_win, seq_len=args.seq_len, step=args.step)
@@ -140,12 +140,10 @@ def main() -> None:
     n_classes = int(np.max(y_seq)) + 1
     input_shape = (X_train.shape[1], X_train.shape[2])
 
-    import tensorflow as tf
-
     classes, counts = np.unique(y_train, return_counts=True)
     class_weight = {int(c): float(len(y_train) / (len(classes) * cnt)) for c, cnt in zip(classes, counts)}
 
-    callback = [
+    callbacks = [
         tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=6, restore_best_weights=True)
     ]
 
@@ -159,7 +157,7 @@ def main() -> None:
             epochs=args.epochs,
             batch_size=args.batch_size,
             class_weight=class_weight,
-            callbacks=callback,
+            callbacks=callbacks,
             verbose=1,
         )
 
