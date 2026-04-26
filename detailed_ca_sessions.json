@@ -1,0 +1,42 @@
+[
+  {
+    "subject": "100-2568-11-19",
+    "prediction": "Novice",
+    "confidence": 0.676,
+    "prob_novice": 0.676,
+    "prob_intermediate": 0.065,
+    "prob_expert": 0.259,
+    "n_samples": 385,
+    "n_windows": 6
+  },
+  {
+    "subject": "101-2025-11-19",
+    "prediction": "Novice",
+    "confidence": 0.698,
+    "prob_novice": 0.698,
+    "prob_intermediate": 0.03,
+    "prob_expert": 0.272,
+    "n_samples": 152472,
+    "n_windows": 6
+  },
+  {
+    "subject": "102-2025-11-19",
+    "prediction": "Novice",
+    "confidence": 0.698,
+    "prob_novice": 0.698,
+    "prob_intermediate": 0.03,
+    "prob_expert": 0.272,
+    "n_samples": 155700,
+    "n_windows": 6
+  },
+  {
+    "subject": "103-2025-11-19",
+    "prediction": "Novice",
+    "confidence": 0.699,
+    "prob_novice": 0.699,
+    "prob_intermediate": 0.029,
+    "prob_expert": 0.272,
+    "n_samples": 114840,
+    "n_windows": 6
+  }
+]

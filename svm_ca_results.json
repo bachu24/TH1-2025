@@ -1,0 +1,72 @@
+{
+  "model": "SVM Enhanced Channel-Agnostic",
+  "hyperparameters": {
+    "C": 5,
+    "gamma": 0.005,
+    "kernel": "rbf",
+    "n_rfe": 60
+  },
+  "loso_accuracy": 0.9167,
+  "loso_balanced_accuracy": 0.9167,
+  "loso_macro_f1": 0.9167,
+  "cv5_accuracy": 0.9667,
+  "cv5_accuracy_std": 0.0408,
+  "confidence_correct_mean": 0.923,
+  "n_features_total": 1512,
+  "n_features_rfe": 60,
+  "top_features": [
+    "Alpha_g_kurt_wmean",
+    "Alpha_occipital_cv_wmean",
+    "Beta_occipital_cv_wmean",
+    "Gamma/all_g_kurt_wmean",
+    "Gamma/all_g_skew_wmean",
+    "Gamma_temporal_cv_wmean",
+    "Theta/all_central_std_wmean",
+    "Theta/all_frontal_std_wmean",
+    "Theta_central_cv_wmean",
+    "r_tg_wmean",
+    "Beta/all_frontal_mean_wstd",
+    "Beta/all_occipital_cv_wstd",
+    "Delta/all_g_p90_wstd",
+    "Delta/all_g_std_wstd",
+    "Gamma_occipital_cv_wstd",
+    "Theta/all_occipital_cv_wstd",
+    "Theta/all_occipital_mean_wstd",
+    "Alpha/all_occipital_cv_wslope",
+    "Alpha_g_skew_wslope",
+    "Alpha_occipital_cv_wslope"
+  ],
+  "classification_report_loso": {
+    "Novice": {
+      "precision": 0.95,
+      "recall": 0.95,
+      "f1-score": 0.95,
+      "support": 20.0
+    },
+    "Intermediate": {
+      "precision": 0.9,
+      "recall": 0.9,
+      "f1-score": 0.9,
+      "support": 20.0
+    },
+    "Expert": {
+      "precision": 0.9,
+      "recall": 0.9,
+      "f1-score": 0.9,
+      "support": 20.0
+    },
+    "accuracy": 0.9166666666666666,
+    "macro avg": {
+      "precision": 0.9166666666666666,
+      "recall": 0.9166666666666666,
+      "f1-score": 0.9166666666666666,
+      "support": 60.0
+    },
+    "weighted avg": {
+      "precision": 0.9166666666666666,
+      "recall": 0.9166666666666666,
+      "f1-score": 0.9166666666666666,
+      "support": 60.0
+    }
+  }
+}

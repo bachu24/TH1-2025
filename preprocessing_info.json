@@ -1,0 +1,13 @@
+{
+  "n_subjects": 60,
+  "n_features_per_window": 252,
+  "n_aggregations": 6,
+  "aggregations": "mean, std, slope, min, max, range",
+  "n_features_total": 1512,
+  "labels": "Group-based: Group1=Novice, Group2=Intermediate, Group3=Expert",
+  "class_distribution": {
+    "Novice": 20,
+    "Intermediate": 20,
+    "Expert": 20
+  }
+}
