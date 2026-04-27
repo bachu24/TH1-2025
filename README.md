@@ -3,6 +3,8 @@
 This project predicts meditation level from raw EEG CSV files and compares three model families:
 1) SVM (RBF), 2) Random Forest, 3) Sequence models (LSTM / Bi-LSTM track).
 
+<img width="763" height="388" alt="image" src="https://github.com/user-attachments/assets/16ae08e7-fc7c-455e-9707-b583070af595" />
+
 ## 1) Raw data input
 
 - Input files are CSVs loaded by:
